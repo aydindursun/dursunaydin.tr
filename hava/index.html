@@ -24,9 +24,12 @@
 </div>
 
 <script>
-  function checkPassword() {
+  async function checkPassword() {
     const pass = document.getElementById("password").value;
-    if (pass === "Manisa45") {
+    const hash = await sha256(pass);
+    const correctHash = "1faf5cb8a9e3286cbc7a17781530463586832a8d0a53665f47c1e34c472c6488";
+
+    if (hash === correctHash) {
       document.getElementById("login").style.display = "none";
       document.getElementById("content").style.display = "block";
       yukle();
@@ -35,16 +38,26 @@
     }
   }
 
-  async function yukle() {
-    const response = await fetch('dosyalar.json');
-    const dosyalar = await response.json();
-    const liste = document.getElementById('dosya-listesi');
+  async function sha256(str) {
+    const buffer = new TextEncoder().encode(str);
+    const digest = await crypto.subtle.digest("SHA-256", buffer);
+    return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
 
-    dosyalar.forEach(dosya => {
-      const li = document.createElement('li');
-      li.innerHTML = `${dosya} <a href="${dosya}" download><button>İndir</button></a>`;
-      liste.appendChild(li);
-    });
+  async function yukle() {
+    try {
+      const response = await fetch('dosyalar.json');
+      const dosyalar = await response.json();
+      const liste = document.getElementById('dosya-listesi');
+
+      dosyalar.forEach(dosya => {
+        const li = document.createElement('li');
+        li.innerHTML = `${dosya} <a href="${dosya}" download><button>İndir</button></a>`;
+        liste.appendChild(li);
+      });
+    } catch (e) {
+      document.getElementById("content").innerHTML = "<p>Dosyalar yüklenemedi.</p>";
+    }
   }
 </script>
 
