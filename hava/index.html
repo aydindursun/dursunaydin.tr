@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Dosya İndirme</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #content { display: none; }
+    button { margin-left: 10px; }
+  </style>
+</head>
+<body>
+
+<div id="login">
+  <h2>Giriş Yap</h2>
+  <input type="password" id="password" placeholder="Şifreyi girin">
+  <button onclick="checkPassword()">Giriş</button>
+  <p id="error" style="color: red;"></p>
+</div>
+
+<div id="content">
+  <h2>Dosyalar</h2>
+  <ul id="dosya-listesi"></ul>
+</div>
+
+<script>
+  function checkPassword() {
+    const pass = document.getElementById("password").value;
+    if (pass === "Manisa45") {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("content").style.display = "block";
+      yukle();
+    } else {
+      document.getElementById("error").innerText = "Hatalı şifre.";
+    }
+  }
+
+  async function yukle() {
+    const response = await fetch('dosyalar.json');
+    const dosyalar = await response.json();
+    const liste = document.getElementById('dosya-listesi');
+
+    dosyalar.forEach(dosya => {
+      const li = document.createElement('li');
+      li.innerHTML = `${dosya} <a href="${dosya}" download><button>İndir</button></a>`;
+      liste.appendChild(li);
+    });
+  }
+</script>
+
+</body>
+</html>
