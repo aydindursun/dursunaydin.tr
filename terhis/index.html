@@ -14,10 +14,9 @@
         align-items: center;
         justify-content: flex-start;
         min-height: 100vh;
-        background: linear-gradient(135deg, #007bff, #8e44ad, #e67e22, #2ecc71); /* mavi, mor, turuncu, yeşil karmaşık gradyant */
+        background: linear-gradient(135deg, #007bff, #8e44ad, #e67e22, #2ecc71);
         background-size: 400% 400%;
         animation: gradientAnimation 15s ease infinite;
-        transition: background 0.5s;
     }
 
     @keyframes gradientAnimation {
@@ -36,64 +35,26 @@
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         text-align: center;
     }
-    h2 {
-        margin-top: 0;
-        color: #333;
-    }
-    .controls {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        margin: 10px 0;
-    }
-    button {
-        padding: 5px 15px;
-        font-size: 18px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        background-color: #007bff;
-        color: white;
-    }
-    button:disabled {
-        background-color: #aaa;
-        cursor: not-allowed;
-    }
-    .value {
-        font-size: 18px;
-        min-width: 30px;
-        display: inline-block;
-        text-align: center;
-    }
-    .subtext {
-        font-size: 12px;
-        color: #666;
-        margin-top: 4px;
-    }
-    .progress-container {
-        background-color: #ddd;
-        border-radius: 20px;
-        overflow: hidden;
-        height: 20px;
-        margin-top: 8px;
-        position: relative;
-    }
-    .progress-bar {
-        height: 100%;
-        text-align: center;
-        color: white;
-        font-size: 12px;
-        line-height: 20px;
-        font-weight: bold;
-        background-color: #007bff; /* sabit renk */
-    }
+    h2 { margin-top: 0; color: #333; }
+    .controls { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 10px 0; }
+    button { padding: 5px 15px; font-size: 18px; border: none; border-radius: 8px; cursor: pointer; background-color: #007bff; color: white; }
+    button:disabled { background-color: #aaa; cursor: not-allowed; }
+    .value { font-size: 18px; min-width: 30px; display: inline-block; text-align: center; }
+    .subtext { font-size: 12px; color: #666; margin-top: 4px; }
+    .progress-container { background-color: #ddd; border-radius: 20px; overflow: hidden; height: 20px; margin-top: 8px; position: relative; }
+    .progress-bar { height: 100%; text-align: center; color: white; font-size: 12px; line-height: 20px; font-weight: bold; background-color: #007bff; }
+    input[type='text'] { cursor: pointer; padding: 10px; border-radius: 8px; border: 1px solid #ccc; text-align: center; width: 200px; font-size: 16px; }
 </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>6 Şubat 2026'ya Kalan Süre</h2>
+    <h2>Bitiş Tarihi</h2>
+    <input type="date" id="targetDateInput" min="2026-01-01" />
+</div>
+
+<div class="card">
+    <h2>Seçilen Tarihe Kalan Süre</h2>
     <p id="remainingTime">Yükleniyor...</p>
     <p class="subtext" id="remainingWeekdays">Yükleniyor...</p>
     <div class="progress-container">
@@ -122,10 +83,11 @@
 </div>
 
 <script>
-const targetDate = new Date('2026-02-06');
-const totalDays = 365;
+let targetDate = localStorage.getItem('targetDate') ? new Date(localStorage.getItem('targetDate')) : new Date('2026-02-06');
 let leaveDays = localStorage.getItem('leaveDays') ? parseInt(localStorage.getItem('leaveDays')) : 26;
+const totalDays = 365;
 
+const targetDateInput = document.getElementById('targetDateInput');
 const leaveDaysEl = document.getElementById('leaveDays');
 const remainingTimeEl = document.getElementById('remainingTime');
 const remainingWeekdaysEl = document.getElementById('remainingWeekdays');
@@ -135,6 +97,13 @@ const earlyWeekdaysEl = document.getElementById('earlyWeekdays');
 const daysLeftEl = document.getElementById('daysLeft');
 const normalProgressEl = document.getElementById('normalProgress');
 const earlyProgressEl = document.getElementById('earlyProgress');
+
+function formatDate(date) {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth()+1).padStart(2,'0');
+    const dd = String(date.getDate()).padStart(2,'0');
+    return `${yyyy}-${mm}-${dd}`;
+}
 
 function countWeekdays(start, end) {
     let count = 0;
@@ -156,14 +125,11 @@ function updateRemainingTime() {
     const today = new Date();
     let diffTime = targetDate - today;
     if(diffTime < 0) diffTime = 0;
-
     let diffDays = Math.floor(diffTime / (1000*60*60*24));
     let months = Math.floor(diffDays/30);
     let days = diffDays % 30;
-
     remainingTimeEl.textContent = `${months} ay ${days} gün (${diffDays} gün)`;
     remainingWeekdaysEl.textContent = `Hafta içi gün sayısı: ${countWeekdays(today, targetDate)}`;
-
     let percent = Math.min(100, Math.round((totalDays - diffDays)/totalDays*100));
     normalProgressEl.style.width = percent + '%';
     normalProgressEl.textContent = percent + '%';
@@ -172,32 +138,36 @@ function updateRemainingTime() {
 function updateEarlyDate() {
     const early = new Date(targetDate);
     early.setDate(early.getDate() - leaveDays);
-
     const options = { year:'numeric', month:'long', day:'numeric' };
     earlyDateFullEl.textContent = `Erken terhis tarihi: ${early.toLocaleDateString('tr-TR', options)} (${getWeekdayName(early)})`;
-
     const today = new Date();
     let diffTime = early - today;
     if(diffTime < 0) diffTime = 0;
     let diffDays = Math.floor(diffTime / (1000*60*60*24));
     let months = Math.floor(diffDays/30);
     let days = diffDays % 30;
-
     earlyDateEl.textContent = `${months} ay ${days} gün (Erken Terhis)`;
     earlyWeekdaysEl.textContent = `Hafta içi gün sayısı: ${countWeekdays(today, early)}`;
     daysLeftEl.textContent = `Bugünden kalan gün: ${diffDays}`;
-
     let percentEarly = Math.min(100, Math.round((totalDays - diffDays)/totalDays*100));
     earlyProgressEl.style.width = percentEarly + '%';
     earlyProgressEl.textContent = percentEarly + '%';
 }
 
 function updateUI() {
+    targetDateInput.value = formatDate(targetDate);
     leaveDaysEl.textContent = leaveDays;
     localStorage.setItem('leaveDays', leaveDays);
+    localStorage.setItem('targetDate', formatDate(targetDate));
     updateRemainingTime();
     updateEarlyDate();
 }
+
+// Date picker direkt input olarak kullanılıyor
+targetDateInput.addEventListener('change', () => {
+    targetDate = new Date(targetDateInput.value);
+    updateUI();
+});
 
 document.getElementById('increase').addEventListener('click', () => { if(leaveDays<26) leaveDays++; updateUI(); });
 document.getElementById('decrease').addEventListener('click', () => { if(leaveDays>0) leaveDays--; updateUI(); });
