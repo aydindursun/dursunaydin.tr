@@ -7,7 +7,6 @@
 <style>
     body {
         font-family: Arial, sans-serif;
-        background-color: #f5f5f5;
         margin: 0;
         padding: 20px;
         display: flex;
@@ -15,7 +14,18 @@
         align-items: center;
         justify-content: flex-start;
         min-height: 100vh;
+        background: linear-gradient(135deg, #007bff, #8e44ad, #e67e22, #2ecc71); /* mavi, mor, turuncu, yeşil karmaşık gradyant */
+        background-size: 400% 400%;
+        animation: gradientAnimation 15s ease infinite;
+        transition: background 0.5s;
     }
+
+    @keyframes gradientAnimation {
+        0% {background-position: 0% 50%;}
+        50% {background-position: 100% 50%;}
+        100% {background-position: 0% 50%;}
+    }
+
     .card {
         background-color: white;
         border-radius: 15px;
@@ -61,6 +71,23 @@
         color: #666;
         margin-top: 4px;
     }
+    .progress-container {
+        background-color: #ddd;
+        border-radius: 20px;
+        overflow: hidden;
+        height: 20px;
+        margin-top: 8px;
+        position: relative;
+    }
+    .progress-bar {
+        height: 100%;
+        text-align: center;
+        color: white;
+        font-size: 12px;
+        line-height: 20px;
+        font-weight: bold;
+        background-color: #007bff; /* sabit renk */
+    }
 </style>
 </head>
 <body>
@@ -69,6 +96,9 @@
     <h2>6 Şubat 2026'ya Kalan Süre</h2>
     <p id="remainingTime">Yükleniyor...</p>
     <p class="subtext" id="remainingWeekdays">Yükleniyor...</p>
+    <div class="progress-container">
+        <div id="normalProgress" class="progress-bar">0%</div>
+    </div>
 </div>
 
 <div class="card">
@@ -86,12 +116,14 @@
     <p id="earlyDateFull">Yükleniyor...</p>
     <p class="subtext" id="earlyWeekdays">Yükleniyor...</p>
     <p id="daysLeft">Yükleniyor...</p>
+    <div class="progress-container">
+        <div id="earlyProgress" class="progress-bar">0%</div>
+    </div>
 </div>
 
 <script>
 const targetDate = new Date('2026-02-06');
-
-// localStorage'dan oku, yoksa default 26
+const totalDays = 365;
 let leaveDays = localStorage.getItem('leaveDays') ? parseInt(localStorage.getItem('leaveDays')) : 26;
 
 const leaveDaysEl = document.getElementById('leaveDays');
@@ -101,20 +133,22 @@ const earlyDateEl = document.getElementById('earlyDate');
 const earlyDateFullEl = document.getElementById('earlyDateFull');
 const earlyWeekdaysEl = document.getElementById('earlyWeekdays');
 const daysLeftEl = document.getElementById('daysLeft');
+const normalProgressEl = document.getElementById('normalProgress');
+const earlyProgressEl = document.getElementById('earlyProgress');
 
 function countWeekdays(start, end) {
     let count = 0;
     let current = new Date(start);
     while (current <= end) {
         const day = current.getDay();
-        if (day !== 0 && day !== 6) count++; // hafta içi gün
+        if (day !== 0 && day !== 6) count++;
         current.setDate(current.getDate() + 1);
     }
     return count;
 }
 
 function getWeekdayName(date) {
-    const weekdays = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+    const weekdays = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
     return weekdays[date.getDay()];
 }
 
@@ -123,55 +157,53 @@ function updateRemainingTime() {
     let diffTime = targetDate - today;
     if(diffTime < 0) diffTime = 0;
 
-    let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    let months = Math.floor(diffDays / 30);
+    let diffDays = Math.floor(diffTime / (1000*60*60*24));
+    let months = Math.floor(diffDays/30);
     let days = diffDays % 30;
 
     remainingTimeEl.textContent = `${months} ay ${days} gün (${diffDays} gün)`;
+    remainingWeekdaysEl.textContent = `Hafta içi gün sayısı: ${countWeekdays(today, targetDate)}`;
 
-    const weekdays = countWeekdays(today, targetDate);
-    remainingWeekdaysEl.textContent = `Hafta içi gün sayısı: ${weekdays}`;
+    let percent = Math.min(100, Math.round((totalDays - diffDays)/totalDays*100));
+    normalProgressEl.style.width = percent + '%';
+    normalProgressEl.textContent = percent + '%';
 }
 
 function updateEarlyDate() {
     const early = new Date(targetDate);
     early.setDate(early.getDate() - leaveDays);
 
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year:'numeric', month:'long', day:'numeric' };
     earlyDateFullEl.textContent = `Erken terhis tarihi: ${early.toLocaleDateString('tr-TR', options)} (${getWeekdayName(early)})`;
 
     const today = new Date();
     let diffTime = early - today;
     if(diffTime < 0) diffTime = 0;
-    let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    let months = Math.floor(diffDays / 30);
+    let diffDays = Math.floor(diffTime / (1000*60*60*24));
+    let months = Math.floor(diffDays/30);
     let days = diffDays % 30;
 
     earlyDateEl.textContent = `${months} ay ${days} gün (Erken Terhis)`;
-    const weekdaysEarly = countWeekdays(today, early);
-    earlyWeekdaysEl.textContent = `Hafta içi gün sayısı: ${weekdaysEarly}`;
+    earlyWeekdaysEl.textContent = `Hafta içi gün sayısı: ${countWeekdays(today, early)}`;
     daysLeftEl.textContent = `Bugünden kalan gün: ${diffDays}`;
+
+    let percentEarly = Math.min(100, Math.round((totalDays - diffDays)/totalDays*100));
+    earlyProgressEl.style.width = percentEarly + '%';
+    earlyProgressEl.textContent = percentEarly + '%';
 }
 
 function updateUI() {
     leaveDaysEl.textContent = leaveDays;
-    localStorage.setItem('leaveDays', leaveDays); // değişiklikleri kaydet
+    localStorage.setItem('leaveDays', leaveDays);
     updateRemainingTime();
     updateEarlyDate();
 }
 
-document.getElementById('increase').addEventListener('click', () => {
-    if (leaveDays < 26) leaveDays++;
-    updateUI();
-});
-
-document.getElementById('decrease').addEventListener('click', () => {
-    if (leaveDays > 0) leaveDays--;
-    updateUI();
-});
+document.getElementById('increase').addEventListener('click', () => { if(leaveDays<26) leaveDays++; updateUI(); });
+document.getElementById('decrease').addEventListener('click', () => { if(leaveDays>0) leaveDays--; updateUI(); });
 
 updateUI();
-setInterval(updateRemainingTime, 1000 * 60 * 60); // Her saat güncelle
+setInterval(updateRemainingTime,1000*60*60);
 </script>
 
 </body>
