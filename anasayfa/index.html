@@ -68,4 +68,31 @@
 
       <div class="actions" role="navigation" aria-label="Hızlı erişim">
         <button class="btn btn-primary" id="open-hava">Hava</button>
-        <button class="btn btn-ghost" id="open-terhis">Terhis</
+        <button class="btn btn-ghost" id="open-terhis">Terhis</button>
+        <a class="btn btn-ghost" href="/" aria-label="Siteye geri dön">Ana site</a>
+        <a class="btn btn-ghost" href="https://github.com/aydindursun/dursunaydin.tr" target="_blank" rel="noopener" aria-label="GitHub Repo">GitHub</a>
+      </div>
+
+      <div style="margin-top:22px; color:var(--muted); font-size:13px; display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+        <span>Hızlı klavye: <span class="kbd">H</span> → Hava, <span class="kbd">T</span> → Terhis</span>
+        <span style="margin-left:auto; opacity:.9">Versiyon: <strong style="font-weight:600">1.0</strong></span>
+      </div>
+    </section>
+
+    <aside class="side" aria-label="Kısa bilgiler">
+      <footer>© <span id="year"></span> Dursun Aydın — Tasarım: sade &amp; şık</footer>
+    </aside>
+
+  </main>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const btnHava = document.getElementById('open-hava');
+    const btnTerhis = document.getElementById('open-terhis');
+
+    btnHava.addEventListener('click', () => { window.location.href = '/hava'; });
+    btnTerhis.addEventListener('click', () => { window.location.href = '/terhis'; });
+    document.addEventListener('keydown', (e) => { const active = document.activeElement; if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return; if (e.key === 'h' || e.key === 'H') btnHava.click(); if (e.key === 't' || e.key === 'T') btnTerhis.click(); });
+  </script>
+</body>
+</html>
