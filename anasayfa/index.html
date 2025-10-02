@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Anasayfa — Dursun Aydın</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0f1724; /* koyu zemin */
+      --card:#0b1220; /* kart zemin */
+      --muted:#94a3b8;
+      --accent:#7c3aed; /* mor ton */
+      --glass: rgba(255,255,255,0.04);
+      --glass-2: rgba(255,255,255,0.02);
+      --radius: 14px;
+      --fw-heading: 700;
+      color-scheme: dark;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, #071224 0%, #071025 40%, #071024 100%);
+      color:#e6eef8;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:1100px;
+      display:grid;
+      grid-template-columns: 1fr 380px;
+      gap:28px;
+      align-items:center;
+    }
+
+    /* sol panel - büyük, bilgi + çağrı */
+    .hero{
+      padding:40px;
+      background: linear-gradient(180deg, rgba(124,58,237,0.06), rgba(124,58,237,0.03));
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      backdrop-filter: blur(6px);
+    }
+
+    .brand{
+      display:flex; gap:14px; align-items:center;
+    }
+    .logo{
+      width:64px; height:64px; border-radius:12px; display:inline-grid; place-items:center;
+      background: linear-gradient(135deg,var(--accent), #4c1d95);
+      box-shadow: 0 6px 18px rgba(124,58,237,0.18);
+      flex-shrink:0;
+    }
+    .logo svg{width:36px;height:36px;opacity:0.98}
+
+    .brand h1{font-size:22px; margin:0; font-weight:var(--fw-heading)}
+    .brand p{margin:0; color:var(--muted); font-size:13px}
+
+    .lead{
+      margin-top:22px;
+      font-size:28px; line-height:1.05; letter-spacing:-0.02em; font-weight:600;
+    }
+    .desc{color:var(--muted); margin-top:12px; font-size:15px}
+
+    .actions{
+      margin-top:28px; display:flex; gap:12px; flex-wrap:wrap;
+    }
+
+    .btn{
+      appearance:none; border:0; cursor:pointer; padding:12px 18px; border-radius:12px; font-weight:600; font-size:15px; display:inline-flex; gap:10px; align-items:center;
+      transition:transform .14s ease, box-shadow .14s ease;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.5);
+    }
+
+    .btn-primary{
+      background: linear-gradient(90deg,var(--accent), #5b21b6);
+      color:white;
+    }
+    .btn-ghost{
+      background: transparent; border:1px solid rgba(255,255,255,0.05); color:var(--muted);
+      backdrop-filter: blur(6px);
+    }
+    .btn:active{ transform:translateY(1px) }
+    .btn:hover{ transform:translateY(-3px) }
+
+    /* sağ panel - küçük card'lar */
+    .side{
+      padding:22px; border-radius:12px; background:linear-gradient(180deg,var(--card), rgba(11,17,32,0.6));
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+      border:1px solid rgba(255,255,255,0.02);
+    }
+
+    .grid{
+      display:grid; gap:14px;
+    }
+
+    .card{ padding:14px; border-radius:10px; background:var(--glass); display:flex; gap:12px; align-items:center; }
+    .card h3{margin:0; font-size:14px}
+    .card p{margin:0; font-size:12px; color:var(--muted)}
+
+    .icon-wrap{ width:44px; height:44px; border-radius:10px; display:grid; place-items:center; background:linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); }
+
+    footer{ grid-column:1/-1; margin-top:18px; color:var(--muted); font-size:13px; text-align:center }
+
+    /* responsive */
+    @media (max-width:880px){
+      .wrap{ grid-template-columns: 1fr; }
+      .side{ order:-1 }
+    }
+
+    /* küçük yardımcı stiller */
+    .kbd{ font-family: monospace; font-size:13px; background:var(--glass-2); padding:6px 8px; border-radius:8px; color:var(--muted)}
+  </style>
+</head>
+<body>
+  <main class="wrap" id="app">
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <!-- minimal D monogram -->
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+            <path d="M6 4h5a5 5 0 010 10H6z" fill="white" opacity="0.95"/>
+            <path d="M11 20H6V4" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div>
+          <h1 id="hero-title">Dursun Aydın</h1>
+          <p>Minimal, şık ve genişletilebilir kişisel kontrol paneli</p>
+        </div>
+      </div>
+
+      <p class="lead">Hoş geldin — basit ve temiz bir başlangıç sayfası.</p>
+      <p class="desc">Aşağıdaki düğmelerle diğer sayfalarına hızlıca ulaşabilirsin. Bu sayfayı ileride yeni fonksiyonlar, widget'lar ve küçük araçlarla genişletebilirsin.</p>
+
+      <div class="actions" role="navigation" aria-label="Hızlı erişim">
+        <button class="btn btn-primary" id="open-hava">
+          <!-- cloud icon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M20 15.5A4.5 4.5 0 0015.5 11h-1A5.5 5.5 0 108 18h7.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Hava Durumu
+        </button>
+
+        <button class="btn btn-ghost" id="open-terhis">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Terhis Bilgisi
+        </button>
+
+        <a class="btn btn-ghost" href="/" aria-label="Siteye geri dön">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Ana site
+        </a>
+      </div>
+
+      <div style="margin-top:22px; color:var(--muted); font-size:13px; display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+        <span>Hızlı klavye: <span class="kbd">H</span> → Hava, <span class="kbd">T</span> → Terhis</span>
+        <span style="margin-left:auto; opacity:.9">Versiyon: <strong style="font-weight:600">1.0</strong></span>
+      </div>
+
+    </section>
+
+    <aside class="side" aria-label="Kısa bilgiler">
+      <div class="grid">
+        <div class="card">
+          <div class="icon-wrap" aria-hidden>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="white" stroke-opacity="0.9" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <h3>Hızlı Erişim</h3>
+            <p>Önemli sayfalara tek tıkla ulaş. Yeni kısayollar ekleyebilirsin.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="icon-wrap" aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 6v6l4 2" stroke="white" stroke-opacity="0.9" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <h3>Genişletilebilir</h3>
+            <p>Widget, API entegrasyonu ve küçük araçlar eklemek için ideal temel.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="icon-wrap" aria-hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7L2 9h7z" stroke="white" stroke-opacity="0.9" stroke-width="0.9" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <h3>Güvenlik</h3>
+            <p>Bu sayfa sadece yönlendirme amaçlıdır; hassas doğrulamalar sunucuda yapılmalı.</p>
+          </div>
+        </div>
+
+        <footer>
+          © <span id="year"></span> Dursun Aydın — Tasarım: sade &amp; şık
+        </footer>
+      </div>
+    </aside>
+
+  </main>
+
+  <script>
+    // yıl güncelleme
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // düğmeler
+    const btnHava = document.getElementById('open-hava');
+    const btnTerhis = document.getElementById('open-terhis');
+
+    btnHava.addEventListener('click', () => {
+      // animasyon/geribildirim için küçük buton efekti
+      btnHava.animate([{ transform: 'translateY(0px)' }, { transform: 'translateY(-4px)' }], { duration: 160, easing: 'ease-out' });
+      // yönlendir
+      window.location.href = '/hava';
+    });
+
+    btnTerhis.addEventListener('click', () => {
+      btnTerhis.animate([{ transform: 'translateY(0px)' }, { transform: 'translateY(-4px)' }], { duration: 160, easing: 'ease-out' });
+      window.location.href = '/terhis';
+    });
+
+    // Klavye kısayolları: H ve T
+    document.addEventListener('keydown', (e) => {
+      const active = document.activeElement;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+      if (e.key === 'h' || e.key === 'H') btnHava.click();
+      if (e.key === 't' || e.key === 'T') btnTerhis.click();
+    });
+
+    // Gelecekte eklenecek fonksiyonlar için global app objesi
+    window.DursunApp = window.DursunApp || { version: '1.0', initTime: Date.now() };
+
+  </script>
+</body>
+</html>
