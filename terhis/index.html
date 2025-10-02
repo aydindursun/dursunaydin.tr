@@ -56,6 +56,11 @@
         display: inline-block;
         text-align: center;
     }
+    .subtext {
+        font-size: 12px;
+        color: #666;
+        margin-top: 4px;
+    }
 </style>
 </head>
 <body>
@@ -63,6 +68,7 @@
 <div class="card">
     <h2>6 Şubat 2026'ya Kalan Süre</h2>
     <p id="remainingTime">Yükleniyor...</p>
+    <p class="subtext" id="remainingWeekdays">Yükleniyor...</p>
 </div>
 
 <div class="card">
@@ -78,18 +84,39 @@
     <h2>Erken Terhis</h2>
     <p id="earlyDate">Yükleniyor...</p>
     <p id="earlyDateFull">Yükleniyor...</p>
+    <p class="subtext" id="earlyWeekdays">Yükleniyor...</p>
     <p id="daysLeft">Yükleniyor...</p>
 </div>
 
 <script>
 const targetDate = new Date('2026-02-06');
-let leaveDays = 26;
+
+// localStorage'dan oku, yoksa default 26
+let leaveDays = localStorage.getItem('leaveDays') ? parseInt(localStorage.getItem('leaveDays')) : 26;
 
 const leaveDaysEl = document.getElementById('leaveDays');
 const remainingTimeEl = document.getElementById('remainingTime');
+const remainingWeekdaysEl = document.getElementById('remainingWeekdays');
 const earlyDateEl = document.getElementById('earlyDate');
 const earlyDateFullEl = document.getElementById('earlyDateFull');
+const earlyWeekdaysEl = document.getElementById('earlyWeekdays');
 const daysLeftEl = document.getElementById('daysLeft');
+
+function countWeekdays(start, end) {
+    let count = 0;
+    let current = new Date(start);
+    while (current <= end) {
+        const day = current.getDay();
+        if (day !== 0 && day !== 6) count++; // hafta içi gün
+        current.setDate(current.getDate() + 1);
+    }
+    return count;
+}
+
+function getWeekdayName(date) {
+    const weekdays = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+    return weekdays[date.getDay()];
+}
 
 function updateRemainingTime() {
     const today = new Date();
@@ -100,7 +127,10 @@ function updateRemainingTime() {
     let months = Math.floor(diffDays / 30);
     let days = diffDays % 30;
 
-    remainingTimeEl.textContent = `${months} ay ${days} gün`; 
+    remainingTimeEl.textContent = `${months} ay ${days} gün (${diffDays} gün)`;
+
+    const weekdays = countWeekdays(today, targetDate);
+    remainingWeekdaysEl.textContent = `Hafta içi gün sayısı: ${weekdays}`;
 }
 
 function updateEarlyDate() {
@@ -108,7 +138,7 @@ function updateEarlyDate() {
     early.setDate(early.getDate() - leaveDays);
 
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    earlyDateFullEl.textContent = `Erken terhis tarihi: ${early.toLocaleDateString('tr-TR', options)}`;
+    earlyDateFullEl.textContent = `Erken terhis tarihi: ${early.toLocaleDateString('tr-TR', options)} (${getWeekdayName(early)})`;
 
     const today = new Date();
     let diffTime = early - today;
@@ -118,11 +148,14 @@ function updateEarlyDate() {
     let days = diffDays % 30;
 
     earlyDateEl.textContent = `${months} ay ${days} gün (Erken Terhis)`;
+    const weekdaysEarly = countWeekdays(today, early);
+    earlyWeekdaysEl.textContent = `Hafta içi gün sayısı: ${weekdaysEarly}`;
     daysLeftEl.textContent = `Bugünden kalan gün: ${diffDays}`;
 }
 
 function updateUI() {
     leaveDaysEl.textContent = leaveDays;
+    localStorage.setItem('leaveDays', leaveDays); // değişiklikleri kaydet
     updateRemainingTime();
     updateEarlyDate();
 }
