@@ -46,8 +46,6 @@
     .wrap{width:100%; max-width:1100px; display:grid; grid-template-columns: 1fr 380px; gap:28px; align-items:center;}
     .hero{padding:40px; background: linear-gradient(180deg, rgba(124,58,237,0.06), rgba(124,58,237,0.03)); border-radius: var(--radius); box-shadow: 0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02); backdrop-filter: blur(6px);}
     .brand{display:flex; gap:14px; align-items:center;}
-    .logo{width:64px; height:64px; border-radius:12px; display:inline-grid; place-items:center; background: linear-gradient(135deg,var(--accent), #4c1d95); box-shadow: 0 6px 18px rgba(124,58,237,0.18); flex-shrink:0;}
-    .logo svg{width:36px;height:36px;opacity:0.98}
     .brand h1{font-size:22px; margin:0; font-weight:var(--fw-heading)}
     .actions{margin-top:28px; display:flex; gap:12px; flex-wrap:wrap;}
     .btn{appearance:none; border:0; cursor:pointer; padding:12px 18px; border-radius:12px; font-weight:600; font-size:15px; display:inline-flex; gap:10px; align-items:center; transition:transform .14s ease, box-shadow .14s ease; box-shadow: 0 6px 18px rgba(2,6,23,0.5);}
@@ -65,57 +63,9 @@
   <main class="wrap" id="app">
     <section class="hero" aria-labelledby="hero-title">
       <div class="brand">
-        <div class="logo" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-            <path d="M6 4h5a5 5 0 010 10H6z" fill="white" opacity="0.95"/>
-            <path d="M11 20H6V4" stroke="rgba(255,255,255,0.06)" stroke-width="1.5"/>
-          </svg>
-        </div>
-        <div>
-          <h1 id="hero-title">Dursun Aydın</h1>
-        </div>
+        <h1 id="hero-title">Dursun Aydın</h1>
       </div>
 
       <div class="actions" role="navigation" aria-label="Hızlı erişim">
-        <button class="btn btn-primary" id="open-hava">
-          Hava
-        </button>
-
-        <button class="btn btn-ghost" id="open-terhis">
-          Terhis
-        </button>
-
-        <a class="btn btn-ghost" href="/" aria-label="Siteye geri dön">
-          Ana site
-        </a>
-
-        <a class="btn btn-ghost" href="https://github.com/aydindursun/dursunaydin.tr" target="_blank" rel="noopener" aria-label="GitHub Repo">
-          GitHub
-        </a>
-      </div>
-
-      <div style="margin-top:22px; color:var(--muted); font-size:13px; display:flex; gap:12px; align-items:center; flex-wrap:wrap">
-        <span>Hızlı klavye: <span class="kbd">H</span> → Hava, <span class="kbd">T</span> → Terhis</span>
-        <span style="margin-left:auto; opacity:.9">Versiyon: <strong style="font-weight:600">1.0</strong></span>
-      </div>
-    </section>
-
-    <aside class="side" aria-label="Kısa bilgiler">
-      <footer>
-        © <span id="year"></span> Dursun Aydın — Tasarım: sade &amp; şık
-      </footer>
-    </aside>
-
-  </main>
-
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-    const btnHava = document.getElementById('open-hava');
-    const btnTerhis = document.getElementById('open-terhis');
-
-    btnHava.addEventListener('click', () => { window.location.href = '/hava'; });
-    btnTerhis.addEventListener('click', () => { window.location.href = '/terhis'; });
-    document.addEventListener('keydown', (e) => { const active = document.activeElement; if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return; if (e.key === 'h' || e.key === 'H') btnHava.click(); if (e.key === 't' || e.key === 'T') btnTerhis.click(); });
-  </script>
-</body>
-</html>
+        <button class="btn btn-primary" id="open-hava">Hava</button>
+        <button class="btn btn-ghost" id="open-terhis">Terhis</
