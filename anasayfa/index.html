@@ -42,7 +42,6 @@
     .logo svg{width:36px;height:36px;opacity:0.98}
     .brand h1{font-size:22px; margin:0; font-weight:var(--fw-heading)}
     .brand p{margin:0; color:var(--muted); font-size:13px}
-    .lead{margin-top:22px; font-size:28px; line-height:1.05; letter-spacing:-0.02em; font-weight:600;}
     .desc{color:var(--muted); margin-top:12px; font-size:15px}
     .actions{margin-top:28px; display:flex; gap:12px; flex-wrap:wrap;}
     .btn{appearance:none; border:0; cursor:pointer; padding:12px 18px; border-radius:12px; font-weight:600; font-size:15px; display:inline-flex; gap:10px; align-items:center; transition:transform .14s ease, box-shadow .14s ease; box-shadow: 0 6px 18px rgba(2,6,23,0.5);}
@@ -68,11 +67,9 @@
         </div>
         <div>
           <h1 id="hero-title">Dursun Aydın</h1>
-          <p>Minimal, şık ve genişletilebilir kişisel kontrol paneli</p>
         </div>
       </div>
 
-      <p class="lead">Hoş geldin — basit ve temiz bir başlangıç sayfası.</p>
       <p class="desc">Aşağıdaki düğmelerle diğer sayfalarına hızlıca ulaşabilirsin.</p>
 
       <div class="actions" role="navigation" aria-label="Hızlı erişim">
@@ -117,23 +114,9 @@
     const btnHava = document.getElementById('open-hava');
     const btnTerhis = document.getElementById('open-terhis');
 
-    btnHava.addEventListener('click', () => {
-      btnHava.animate([{ transform: 'translateY(0px)' }, { transform: 'translateY(-4px)' }], { duration: 160, easing: 'ease-out' });
-      window.location.href = '/hava';
-    });
-
-    btnTerhis.addEventListener('click', () => {
-      btnTerhis.animate([{ transform: 'translateY(0px)' }, { transform: 'translateY(-4px)' }], { duration: 160, easing: 'ease-out' });
-      window.location.href = '/terhis';
-    });
-
-    document.addEventListener('keydown', (e) => {
-      const active = document.activeElement;
-      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
-      if (e.key === 'h' || e.key === 'H') btnHava.click();
-      if (e.key === 't' || e.key === 'T') btnTerhis.click();
-    });
-
+    btnHava.addEventListener('click', () => { btnHava.animate([{ transform: 'translateY(0px)' }, { transform: 'translateY(-4px)' }], { duration: 160, easing: 'ease-out' }); window.location.href = '/hava'; });
+    btnTerhis.addEventListener('click', () => { btnTerhis.animate([{ transform: 'translateY(0px)' }, { transform: 'translateY(-4px)' }], { duration: 160, easing: 'ease-out' }); window.location.href = '/terhis'; });
+    document.addEventListener('keydown', (e) => { const active = document.activeElement; if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return; if (e.key === 'h' || e.key === 'H') btnHava.click(); if (e.key === 't' || e.key === 'T') btnTerhis.click(); });
     window.DursunApp = window.DursunApp || { version: '1.0', initTime: Date.now() };
   </script>
 </body>
